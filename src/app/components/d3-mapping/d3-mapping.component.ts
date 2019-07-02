@@ -152,6 +152,8 @@ drawNodeStack(container, elementwidth, elementheight, startX, startY, verticalma
               d.pt =[];
               return myY;
           }))
+          .attr("rx", 10)         // set the x corner curve radius
+          .attr("ry", 10)        // set the y corner curve radius
           .attr("stroke-width", "2")
           .attr("fill", "none")
           .attr("stroke", (d => d.col));
