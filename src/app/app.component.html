@@ -1,0 +1,10 @@
+<div class ="wrapper">
+  <div class ="menu">
+    <div class ="item" *ngFor="let m of menu" [routerLink]="m.path" [routerLinkActive]="'active'">{{m.path}}</div>
+  </div>
+  <div class="content">
+    <div class="content__inner">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

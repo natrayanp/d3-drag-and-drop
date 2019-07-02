@@ -1,0 +1,8 @@
+.canvas{
+    border:1px solid black;
+}
+
+.active {
+  stroke:Yellow;
+  stroke-width: 2px;
+}
