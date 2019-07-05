@@ -48,6 +48,7 @@ active_pathid: number;
 md: any;
 cont_w = 1000;
 cont_h = 500;
+bezierWeight = 0.775;
 
   constructor() {
 
@@ -71,9 +72,10 @@ this.canvas.append("g").attr("id", (d => {
     return this.outputcontainer.attr("id") + "-2";
 }));
 */
+this.data_list = this.inputs;
 this.drawNodeStack(this.inputcontainer, this.elementwidth, this.elementheight, this.inputstartx, this.inputstarty, this.verticalmargin, this.inputs, "RIGHT", 0);
 
-this.drawNodeStack(this.outputcontainer, this.elementwidth, this.elementheight, this.outputstartx, this.outputstarty, this.verticalmargin, this.outputs, "LEFT", 1);
+//this.drawNodeStack(this.outputcontainer, this.elementwidth, this.elementheight, this.outputstartx, this.outputstarty, this.verticalmargin, this.outputs, "LEFT", 1);
 
 }
 
@@ -81,7 +83,7 @@ drawNodeStack(container, elementwidth, elementheight, startX, startY, verticalma
   let coordinates : any;
   // dragdot2, dragline: any;
   //this.drawnode_cont = container;
-  this.data_list = data;
+  
   let dotpositionABS = [0, 0];
   ////console.log(container);
   console.log(container.attr("id"))
@@ -382,10 +384,11 @@ dotcircle_dragging(d, i, n) {
 }
 
 dotcircle_dragend(d, i, n) {
+    console.log("dotcircle dragend");
     console.log(this.data_list);
               let target = this.detectDropNode( this.xx, this.yy, this.data_list);
               if (target !== "null") {
-                  this.path_maintenance(d,target);
+                  this.path_maintenance(d,target,true);
                   this.dragdot2.remove();
               } else {
                 console.log("inside else");
@@ -405,20 +408,30 @@ dotcircle_dragend(d, i, n) {
 
     let target = [{},{}];
     if (data[0].type === 1) {   //if root is from input target is outputs
-        target = this.outputs;
+      //  target = this.outputs;
     } else {
         target = this.inputs;
     }
+target = this.inputs;
+
     console.log(target);
     let i;
     for (i = 0; i < target.length; i++) {
         let x = target[i].x;
         let y = target[i].y;
+        console.log(target[i]);
         let width = target[i].width;
         let height = target[i].height;
-        if (xx > x && xx < x + width) { //check whether horizontally in
+        console.log (xx + " " + x + " " + parseInt(xx+width));
+        if (parseInt(xx+width) > x && xx < x ) { //check whether horizontally in
+        console.log("X all paa");
             if (yy > y && yy < y + height) { //check whether vertically in
+              console.log("all paa");
+              console.log("result" );
+                            console.log( target[i]);
+
                 return target[i];
+                
             }
         }
     }
@@ -501,7 +514,30 @@ getdotpositonr (dotposition,startX, elementwidth) {
   return dotpositionABSc;
 }
 
+
+
+/*
 path_maintenance(d,target = null) {
+    if(d.pt.length >1 ) {
+    d.pt.pop()
+    };
+    console.log("inside maintenance");
+      console.log(d);
+            console.log(target);
+
+  if(target == null) {
+      console.log("inside null");
+      d.pt.push({ x: this.xx, y: this.yy });
+  } else {
+    d.pt.push({ x: target.dotposition[0], y: target.dotposition[1] });
+  }
+  this.dragline.attr("d", this.myline);
+  
+}
+*/
+
+
+path_maintenance(d,target = null,end =false) {
     if(d.pt.length >1 ) {
     d.pt.pop()
     };
@@ -511,11 +547,41 @@ path_maintenance(d,target = null) {
     console.log("inside null");
       d.pt.push({ x: this.xx, y: this.yy });
   } else {
-    d.pt.push({ x: target.dotposition[0], y: target.dotposition[1] });
+    if (end) {
+{
+  console.log("inside end");
+  console.log(d.pt[0].x);
+    let x1 =  d.pt[0].x ;
+    let y1 =  d.pt[0].y;
+    let x4 =  target.dotposition[0] - parseInt(d.width);
+    let y4 =  target.dotposition[1];
+
+    let dx = Math.abs(x4 - x1) * this.bezierWeight;
+  
+    let x2 = x1 + dx;
+    let x3 = x4 - dx;
+    this.myline = "M" + x1 + "," + y1 
+                  +"C" + x2 + "," + y1 
+                  + " " + x3 + "," +  y4
+                  + " " + x4 + "," +  y4;
+/*
+    this.myline = "M" + d.pt[0].x + "," + d.pt[0].y                              // start at the child node
+         + "C" + d.pt[0].x + "," + (d.pt[0].y + target.dotposition[1]) / 2           /* pull the line a little upward*/
+//         + " " + target.dotposition[0] + "," +  (d.pt[0].y  + target.dotposition[1]) / 2   /* pull the line a little downward*/
+  //       + " " + target.dotposition[0] + "," + target.dotposition[1];               // end at the parent node
+
+}
+
+
+    } else {
+            d.pt.push({ x: target.dotposition[0], y: target.dotposition[1] });
+    }
+    
   }
   this.dragline.attr("d", this.myline);
   
 }
+
 
 getpathid() {
   let s =this.pathid; 
