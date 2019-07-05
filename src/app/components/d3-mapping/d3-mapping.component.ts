@@ -46,6 +46,9 @@ myline: any
 pathid = 1;
 active_pathid: number;
 md: any;
+cont_w = 1000;
+cont_h = 500;
+
   constructor() {
 
    }
@@ -431,12 +434,14 @@ node_dragstarted(d, i, n) {
 
 node_dragged(d, i, n) {
   console.log(d);
+    d.x = Math.max(0, Math.min((this.cont_w-d.width -20), d3.event.x));
+    d.y = Math.max(-10, Math.min((this.cont_h-d.height)-25, d3.event.y));
   d3.select(n[i]).select(".input-leaf")
-    .attr("x", d.x = d3.event.x)
+    .attr("x", d.x )
     //.attr("y", d.y = d3.event.y);
     .attr("y", ((d, i) => {
               //var myY = startY + ((d.height + verticalmargin) * i);
-              d.y = d3.event.y;
+              //d.y = d3.event.y;
               //d.dotposition = [0, 0];
               d.dotposition[0] = this.getdotpositonr(d.dotpositionr,d.x,d.width); //set the dot position
               d.dotposition[1] = d.y + (d.height) / 2;
@@ -444,19 +449,19 @@ node_dragged(d, i, n) {
               return d.y;
           }));
   d3.select(n[i]).select(".input-leaf1")
-    .attr("x", d.x = d3.event.x)
-    .attr("y", d.y = d3.event.y);
+    .attr("x", d.x )
+    .attr("y", d.y );
 
   d3.select(n[i]).select(".input-leaf2")
-    .attr("x", d.x = d3.event.x + d.width - (d.width/5))
-    .attr("y", d.y = d3.event.y) ;
+    .attr("x", d.x = (d.x + d.width - (d.width/5)))
+    .attr("y", d.y ) ;
 
   d3.select(n[i]).select("image")
-    .attr("x", d.x = d3.event.x)
-    .attr("y", d.y = d3.event.y);
+    .attr("x", d.x )
+    .attr("y", d.y );
   
   d3.select(n[i]).select("text")
-    .attr("x", d.x = d3.event.x)
+    .attr("x", d.x )
     //.attr("y", d.y = d3.event.y);
     .attr("y", ((d, i) =>  d.y + (d.height) / 2))
   d3.select(n[i]).select(".cicle1")
