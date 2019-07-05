@@ -447,8 +447,14 @@ node_dragstarted(d, i, n) {
 
 node_dragged(d, i, n) {
   console.log(d);
-    d.x = Math.max(0, Math.min((this.cont_w-d.width -20), d3.event.x));
-    d.y = Math.max(-10, Math.min((this.cont_h-d.height)-25, d3.event.y));
+    if (this.cont_w-d.width < d3.event.x) {
+       let canvas = d3.select(".canvas").attr("width",d3.event.x);
+    }
+  
+  d.x = d3.event.x - 150;
+d.y = d3.event.y;
+ //   d.x = Math.max(0, Math.min((this.cont_w-d.width -20), d3.event.x));
+ //   d.y = Math.max(-10, Math.min((this.cont_h-d.height)-25, d3.event.y));
   d3.select(n[i]).select(".input-leaf")
     .attr("x", d.x )
     //.attr("y", d.y = d3.event.y);
